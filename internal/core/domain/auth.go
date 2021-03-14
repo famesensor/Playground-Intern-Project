@@ -16,9 +16,7 @@ const (
 )
 
 type AuthClaim struct {
-	UserId string `json:"userId"`
-	HgId   string `json:"hgId"`
-	Email  string `json:"email"`
+	HgId string `json:"hgId"`
 	jwt.StandardClaims
 }
 
@@ -31,9 +29,7 @@ type TokenCard struct {
 	RefreshToken string `json:"refreshToken"`
 }
 type AuthDocument struct {
-	UserId       string    `firestore:"userId"`
 	HgId         string    `firestore:"hgId"`
-	Email        string    `firestore:"email"`
 	RefreshToken string    `firestore:"refreshToken"`
 	IsRevoked    bool      `firestore:"isRevoked"`
 	TokenType    string    `firestore:"tokenType"`

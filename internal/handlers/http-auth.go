@@ -47,7 +47,7 @@ func (h *AuthHandler) ReqToken(c *fiber.Ctx) error {
 			return reponseHandler.ReponseMsg(c, fiber.StatusBadRequest, "failed", "", &fiber.Map{"isRegistered": false})
 		}
 		// generate token and create token document into database
-		tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{UserId: userDoc.UserId, Email: userDoc.Email, HgId: userDoc.HgId})
+		tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{HgId: userDoc.HgId})
 		if err != nil {
 			return reponseError(c, err)
 		}
@@ -94,7 +94,7 @@ func (h *AuthHandler) RegisterUser(c *fiber.Ctx) error {
 	}
 
 	// generate token and create token document into database
-	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{UserId: userDoc.ID, Email: userDoc.Email, HgId: hgId})
+	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{HgId: hgId})
 	if err != nil {
 		return reponseError(c, err)
 	}
@@ -157,7 +157,7 @@ func (h *AuthHandler) Otp(c *fiber.Ctx) error {
 	}
 
 	// generate token and create token document into database
-	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{UserId: userDoc.UserId, Email: userDoc.Email, HgId: userDoc.HgId})
+	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{HgId: userDoc.HgId})
 	if err != nil {
 		return reponseError(c, err)
 	}

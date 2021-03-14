@@ -69,9 +69,7 @@ func (u *AuthUsecase) RefreshToken(ctx context.Context, refreshTk string) (model
 	acT := time.Minute * 10
 	rfT := time.Hour * 168
 	clamis := &model.AuthClaim{
-		UserId: rfToken.UserId,
-		Email:  rfToken.Email,
-		HgId:   rfToken.HgId,
+		HgId: rfToken.HgId,
 	}
 
 	TkDoc, err := u.ReqTokenDocument(ctx, acT, rfT, "bearer", clamis)
@@ -185,8 +183,6 @@ func generateTokenVerifyDocument(accessTk, refreshTk, tokenType string, rfTk tim
 			RefreshToken: refreshTk,
 		},
 		AuthDocument: model.AuthDocument{
-			UserId:       authClaims.UserId,
-			Email:        authClaims.Email,
 			HgId:         authClaims.HgId,
 			RefreshToken: refreshTk,
 			IsRevoked:    false,

@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// TODO: Validate content if user isn't upload image
 type InputPost struct {
 	PostId           string   `json:"postId" firestore:"-"`
 	RoomId           string   `json:"roomId" firestore:"roomId" form:"roomId" validate:"required"`
