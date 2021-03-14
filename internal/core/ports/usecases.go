@@ -9,7 +9,7 @@ import (
 
 type AuthenUsecase interface {
 	// ReqTokenDocument -> is the (fn) will be create authen document and generate token
-	ReqTokenDocument(ctx context.Context, acT time.Duration, rfT time.Duration, tokenType string, claims *model.AuthClaim) (model.TokenVerificationDocuments, error)
+	ReqTokenDocument(ctx context.Context, tokenType string, claims *model.AuthClaim) (model.TokenVerificationDocuments, error)
 	// CreateAuthDoc -> is the (fn) will be create authen document into repository
 	CreateAuthDoc(ctx context.Context, authDoc model.AuthDocument) error
 	// VerifyToken -> is the (fn) for verify stauts token
@@ -33,11 +33,6 @@ type UserUsecase interface {
 	GetUserById(ctx context.Context, id string) (model.User, error)
 	// GetUserByEmail -> get user information by Email
 	GetUserByEmail(ctx context.Context, email string) (model.User, error)
-}
-
-type ProfileUsecase interface {
-	// GetProfileByHgId -> get profile information by hgId
-	GetProfileByHgId(ctx context.Context, hgId string) (model.Profile, error)
 }
 
 type RestaurantUsecase interface {
