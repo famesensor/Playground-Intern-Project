@@ -63,31 +63,6 @@ func (r *PostFeedsFirestoreRepository) CreateHangoPost(ctx context.Context, post
 	return hangoPost, nil
 }
 
-// func (r *PostFeedsFirestoreRepository) EditHangoPost(ctx context.Context, postId string, postDoc model.InputPost) (model.HangoPost, error) {
-// 	ref := r.firestore.Collection(postCollection).Doc(postId)
-// 	err := r.firestore.RunTransaction(ctx, func(c context.Context, tx *firestore.Transaction) error {
-// 		_, err := tx.Get(ref)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		return tx.Set(ref, map[string]interface{}{
-// 			"content":   postDoc.Content,
-// 			"picture":   postDoc.Picture,
-// 			"type":      postDoc.Type,
-// 			"updatedAt": time.Now(),
-// 		}, firestore.MergeAll)
-// 	})
-// 	if err != nil {
-// 		if grpc.Code(err) == codes.NotFound {
-// 			return model.HangoPost{}, errs.DocumentNotFound
-// 		}
-// 		return model.HangoPost{}, err
-// 	}
-
-// 	return r.GetHangoPostByID(ctx, postId)
-// }
-
-// TODO: Delete sub collection of post when post deleted
 func (r *PostFeedsFirestoreRepository) DeleteHangoPost(ctx context.Context, postId string) error {
 	if _, err := r.firestore.Collection(postCollection).Doc(postId).Delete(ctx); err != nil {
 		return err
@@ -171,10 +146,6 @@ func (r *PostFeedsFirestoreRepository) GetAllHangoPost(ctx context.Context, post
 			hangoPosts = append(hangoPosts, *hangoPost)
 		}
 	}
-	// // This is for mock trends posts
-	// if postQuery.Popular {
-	// 	sort.Slice(hangoPosts, func(i, j int) bool { return hangoPosts[i].LikeCount > hangoPosts[j].LikeCount })
-	// }
 
 	return hangoPosts, nil
 }

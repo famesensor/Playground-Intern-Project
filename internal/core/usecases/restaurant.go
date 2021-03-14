@@ -27,7 +27,6 @@ func NewRestaurantUsecase(RestaurantFirestoreRepo interfaces.RestaurantFirestore
 
 func (u *RestaurantUsecase) GetRestaurantById(ctx context.Context, restId string) (model.ResponseRestaurant, error) {
 	return u.RestaurantFirestoreRepo.GetRestaurantById(ctx, restId)
-
 }
 
 func (u *RestaurantUsecase) GetRestaurantNearby(ctx context.Context, restQuery model.RestaurantQuery) ([]model.ReponseHomeRestaurant, error) {
@@ -41,11 +40,6 @@ func (u *RestaurantUsecase) GetRestaurantNearby(ctx context.Context, restQuery m
 	mi := restQuery.Distance / 1.609344
 	if restQuery.Open {
 		timeNow = time.Now().Format("15:04")
-		// t := strings.Split(timeNow, ":")
-		// // Convert 00:00 to 24:00
-		// if t[0] == "00" {
-		// 	timeNow = "24" + t[1]
-		// }
 	}
 
 	// Hash lat,lng to string for search
@@ -103,18 +97,17 @@ func (u *RestaurantUsecase) CheckInRestaurant(ctx context.Context, hgId string, 
 		return "", err
 	}
 
-	// TODO: change default reduis
 	// Calculate distance between two location and check reduis user
 	dist := geolocation.DistanceBetween(restDoc.Location.Latitude, restDoc.Location.Longitude, userDoc.UserLat, userDoc.Userlng, "K")
 	if dist*1000 >= 5000 { // 500 meters or restDoc.info.Reduis
 		return "", errs.UserOutofReduis
 	}
 
-	// // Check if user check-in with out time range
-	// timeNow := time.Now().Format("15:04")
-	// if timeNow <= restDoc.Info.Open && restDoc.Info.Close <= timeNow {
-	// 	return "", errs.YouCannotCheckInApart
-	// }
+	// Check if user check-in with out time range
+	timeNow := time.Now().Format("15:04")
+	if timeNow <= restDoc.Info.Open && restDoc.Info.Close <= timeNow {
+		return "", errs.YouCannotCheckInApart
+	}
 
 	// Create CheckInDoc
 	err = u.RestaurantFirestoreRepo.CreateCheckIn(ctx, hgId, userDoc.RestId)

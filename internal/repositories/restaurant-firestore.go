@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"errors"
-	"log"
 	"math/rand"
 	"time"
 
@@ -117,7 +116,6 @@ func (r *RestaurantFirestoreRepo) GetRestaurantNearby(ctx context.Context, resta
 				info, _ := doc.DataAt("info")
 				temp := info.(map[string]interface{})
 				if restaurantQuery.TimeNow <= temp["open"].(string) && temp["close"].(string) <= restaurantQuery.TimeNow {
-					log.Println("continue")
 					continue
 				}
 			}
@@ -156,8 +154,8 @@ func (r *RestaurantFirestoreRepo) CreateCheckIn(ctx context.Context, hgId, restI
 	checkDoc := model.CheckInDoc{
 		RestId:    restId,
 		UId:       uid,
-		NameAnon:  "Anonymous" + uid,
-		Picture:   "https://yt3.ggpht.com/ytc/AAUvwniHNhQyp4hWj3nrADnils-6N3jNREP8rWKGDTp0Lg=s900-c-k-c0x00ffffff-no-rj",
+		NameAnon:  "Hanger" + uid,
+		Picture:   "https://firebasestorage.googleapis.com/v0/b/hango-dev-32d20.appspot.com/o/utils%2Fanonymous%2Fhanger.svg?alt=media",
 		HgId:      hgId,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -343,35 +341,35 @@ func (r *RestaurantFirestoreRepo) GetCheckInAnonymous(ctx context.Context, restI
 }
 
 func (r *RestaurantFirestoreRepo) GetCheckInPeakMode(ctx context.Context, restId string) (peakModeDocs []model.PeakModeDoc, err error) {
-	// restRef := r.firestore.Doc(restaurantCollection + "/" + restId)
-	// iter := restRef.Collection(userCheckInCollection).Where("isRevoked", "==", false).Where("peakMode", "==", true).OrderBy("createdAt", firestore.Desc).Documents(ctx)
-	// defer iter.Stop()
+	restRef := r.firestore.Doc(restaurantCollection + "/" + restId)
+	iter := restRef.Collection(userCheckInCollection).Where("isRevoked", "==", false).Where("peakMode", "==", true).OrderBy("createdAt", firestore.Desc).Documents(ctx)
+	defer iter.Stop()
 
-	// for {
-	// 	doc, err := iter.Next()
-	// 	if err == iterator.Done {
-	// 		break
-	// 	}
-	// 	if err != nil {
-	// 		return peakModeDocs, err
-	// 	}
-	// 	if doc.Exists() {
-	// 		peakModeDoc := new(model.PeakModeDoc)
-	// 		doc.DataTo(peakModeDoc)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return peakModeDocs, err
+		}
+		if doc.Exists() {
+			peakModeDoc := new(model.PeakModeDoc)
+			doc.DataTo(peakModeDoc)
 
-	// 		// Get profile user
-	// 		userIter, err := r.firestore.Collection(userCollection).Where("hgId", "==", peakModeDoc.HgId).Limit(1).Documents(ctx).GetAll()
-	// 		if err != nil {
-	// 			return []model.PeakModeDoc{}, err
-	// 		}
-	// 		profileDoc := new(model.User)
-	// 		userIter[0].DataTo(profileDoc)
-	// 		peakModeDoc.NickName = profileDoc.Nickname
-	// 		peakModeDoc.Picture = profileDoc.Picture.Img1
+			// Get profile user
+			userIter, err := r.firestore.Collection(userCollection).Where("hgId", "==", peakModeDoc.HgId).Limit(1).Documents(ctx).GetAll()
+			if err != nil {
+				return []model.PeakModeDoc{}, err
+			}
+			profileDoc := new(model.User)
+			userIter[0].DataTo(profileDoc)
+			peakModeDoc.NickName = profileDoc.Nickname
+			peakModeDoc.Picture = profileDoc.Picture
 
-	// 		peakModeDocs = append(peakModeDocs, *peakModeDoc)
-	// 	}
-	// }
+			peakModeDocs = append(peakModeDocs, *peakModeDoc)
+		}
+	}
 
 	return peakModeDocs, nil
 }

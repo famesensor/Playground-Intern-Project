@@ -24,7 +24,7 @@ type RegisterUser struct {
 	Password string `json:"password,omitempty"`
 	Platform string `json:"platform" validate:"required,oneof=social otp"`
 	Gender   string `json:"gender" validate:"required"`
-	Picture  string `json:"picture" validate:"omitempty,dive,url"`
+	Picture  string `json:"picture" validate:"omitempty,url"`
 	Otp      string `json:"otp,omitempty" validate:"required_if=Platform otp,omitempty,len=6,numeric"`
 }
 

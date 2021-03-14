@@ -50,23 +50,6 @@ func (h *CommentHandler) CreateCommentPost(c *fiber.Ctx) error {
 	return reponseHandler.ReponseMsg(c, fiber.StatusCreated, "success", "", commentInfo.HangoComment)
 }
 
-// func (h *CommentHandler) EditCommentPost(c *fiber.Ctx) error {
-// 	// Get coment update from fiber context
-// 	commentUpdate := c.Locals("bodyData").(*model.UpdateComment)
-
-// 	// Get hgId from conetext fiber
-// 	tk := c.Locals("user").(*jwt.Token)
-// 	claims := tk.Claims.(jwt.MapClaims)
-// 	hgId := claims["hgId"].(string)
-
-// 	res, err := h.commentUc.UpdateComment(c.Context(), hgId, *commentUpdate)
-// 	if err != nil {
-// 		return reponseError(c, err)
-// 	}
-
-// 	return reponseHandler.ReponseMsg(c, fiber.StatusOK, "success", "", res)
-// }
-
 func (h *CommentHandler) DeleteComment(c *fiber.Ctx) error {
 	commentQuery := c.Locals("queryData").(*model.PostCommentQuery)
 

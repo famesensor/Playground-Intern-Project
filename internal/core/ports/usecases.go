@@ -39,7 +39,6 @@ type RestaurantUsecase interface {
 	// CreateRestaurant(ctx context.Context, restDoc model.CreateRestaurant) error
 	GetRestaurantById(ctx context.Context, restId string) (model.ResponseRestaurant, error)
 	GetRestaurantNearby(ctx context.Context, restQuery model.RestaurantQuery) ([]model.ReponseHomeRestaurant, error)
-	// GetRestaurantByName(ctx context.Context, restName, lastRestId string) ([]model.ReponseHomeRestaurant, error)
 
 	CheckInRestaurant(ctx context.Context, hgId string, checkInDoc model.UserCheckIn) (string, error)
 	GetCheckIn(ctx context.Context, hgId, restId string) (model.CheckInDoc, error)
@@ -52,7 +51,6 @@ type RestaurantUsecase interface {
 
 type PostFeedsUsecase interface {
 	CreateHangoPost(ctx context.Context, postDoc model.InputPost, userId string) (model.HangoPost, error)
-	// EditHangoPost(ctx context.Context, postId, userId string, postDoc model.InputPost) (model.HangoPost, error)
 	DeleteHangoPost(ctx context.Context, postId, userId string) error
 	GetPostById(ctx context.Context, hgId, postId string) (model.HangoPost, error)
 	GetAllHangoPost(ctx context.Context, postQuery model.FeedPostQuery) ([]model.PostFeedReponse, error)
@@ -64,7 +62,6 @@ type PostFeedsUsecase interface {
 
 type CommentPostUsecase interface {
 	CreateComment(ctx context.Context, hgId string, commentInput model.InputComment) (model.CommentNotiDocuments, error)
-	// UpdsateComment(ctx context.Context, hgId string, commentUpdate model.UpdateComment) (model.HangoComment, error)
 	DeleteComment(ctx context.Context, hgId string, commentQuery model.PostCommentQuery) error
 	GetCommentInPost(ctx context.Context, hgId string, commentQuery model.GetCommentQuery) ([]model.HangoComment, error)
 	UpdateLikeComment(ctx context.Context, hgId string, commentQuery model.PostCommentQuery) (string, error)

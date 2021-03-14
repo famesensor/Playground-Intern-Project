@@ -37,29 +37,6 @@ func (h *PostFeedsHandler) CreateHangoPost(c *fiber.Ctx) error {
 	return reponseHandler.ReponseMsg(c, fiber.StatusCreated, "success", "", res)
 }
 
-// func (h *PostFeedsHandler) EditHangoPost(c *fiber.Ctx) error {
-// 	// Get postId form params
-// 	postId := c.Params("id")
-// 	if postId == "" {
-// 		return reponseHandler.ReponseMsg(c, fiber.StatusBadRequest, "failed", "Validation Errors", &fiber.Map{"PostId": "PostId is required"})
-// 	}
-
-// 	// Get data from context fiber and Convert type
-// 	postDoc, _ := c.Locals("bodyData").(*model.InputPost)
-
-// 	// Get hgId from conetext fiber
-// 	tk := c.Locals("user").(*jwt.Token)
-// 	claims := tk.Claims.(jwt.MapClaims)
-// 	hgId := claims["hgId"].(string)
-
-// 	res, err := h.postUc.EditHangoPost(c.Context(), postId, hgId, *postDoc)
-// 	if err != nil {
-// 		return reponseError(c, err)
-// 	}
-
-// 	return reponseHandler.ReponseMsg(c, fiber.StatusOK, "success", "", res)
-// }
-
 func (h *PostFeedsHandler) DeleteHangoPost(c *fiber.Ctx) error {
 	// Get postId form params
 	postId := c.Params("id")

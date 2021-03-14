@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	roomIdPublic string = "Hango-2021-Public"
+	roomIdPublic string = "Hango-Feed-Public"
 )
 
 type PostFeedsUsecase struct {
@@ -62,23 +62,6 @@ func (u *PostFeedsUsecase) CreateHangoPost(ctx context.Context, postDoc model.In
 	return hangPost, nil
 }
 
-// func (u *PostFeedsUsecase) EditHangoPost(ctx context.Context, postId, hgId string, postDoc model.InputPost) (model.HangoPost, error) {
-// 	postInfo, err := u.PostFirestoreRepo.GetHangoPostByID(ctx, postId)
-// 	if err != nil {
-// 		return model.HangoPost{}, err
-// 	}
-// 	if hgId != postInfo.HgId {
-// 		return model.HangoPost{}, errs.OperationIsnotAllowed
-// 	}
-
-// 	postUpdate, err := u.PostFirestoreRepo.EditHangoPost(ctx, postId, postDoc)
-// 	if err != nil {
-// 		return model.HangoPost{}, err
-// 	}
-
-// 	return postUpdate, nil
-// }
-
 func (u *PostFeedsUsecase) DeleteHangoPost(ctx context.Context, postId, hgId string) error {
 	postDoc, err := u.GetPostById(ctx, hgId, postId)
 	if err != nil {
@@ -91,7 +74,6 @@ func (u *PostFeedsUsecase) DeleteHangoPost(ctx context.Context, postId, hgId str
 	if err := u.PostFirestoreRepo.DeleteHangoPost(ctx, postId); err != nil {
 		return err
 	}
-	// TODO: handler delete picture in cloud storage
 
 	return nil
 }
@@ -186,10 +168,6 @@ func (u *PostFeedsUsecase) UploadImagePost(ctx context.Context, pictures []model
 	if err != nil {
 		return model.PictureDocuments{}, err
 	}
-	// urls, err := u.UploadFileRepo.UploadFiletoStorage(ctx, files, imgQuery.Collection, imgQuery.PostId)
-	// if err != nil {
-	// 	return model.PictureDocuments{}, err
-	// }
 
 	return model.PictureDocuments{UrlThumbnail: urlThumbnail, UrlLarge: urlLarge, PostId: imgQuery.PostId}, nil
 }
