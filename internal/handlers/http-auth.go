@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-	"log"
 	"time"
 
 	model "github.com/HangoKub/Hango-service/internal/core/domain"
@@ -17,11 +15,6 @@ type AuthHandler struct {
 	authUc interfaces.AuthenUsecase
 	userUc interfaces.UserUsecase
 }
-
-const (
-	acExp time.Duration = time.Minute * 10
-	rfExp time.Duration = time.Hour * 168
-)
 
 func reponseError(c *fiber.Ctx, err error) error {
 	status, code, messages := errs.ErrorDetails(err)
@@ -43,11 +36,11 @@ func (h *AuthHandler) ReqToken(c *fiber.Ctx) error {
 	switch user.Platform {
 	case "social":
 		if errUser != nil {
-			log.Printf("Error Get User By ID : %v\n", errUser)
 			return reponseHandler.ReponseMsg(c, fiber.StatusBadRequest, "failed", "", &fiber.Map{"isRegistered": false})
 		}
+
 		// generate token and create token document into database
-		tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{HgId: userDoc.HgId})
+		tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), "Bearer", &model.AuthClaim{HgId: userDoc.HgId})
 		if err != nil {
 			return reponseError(c, err)
 		}
@@ -80,7 +73,6 @@ func (h *AuthHandler) RegisterUser(c *fiber.Ctx) error {
 	userDoc := c.Locals("bodyData").(*model.RegisterUser)
 
 	if userDoc.Platform == "otp" {
-		log.Println("Run")
 		if err := h.authUc.VerifyOtp(c.Context(), userDoc.Otp, userDoc.ID, "own-verification", model.VERIFY_AUTH_OTP); err != nil {
 			return reponseError(c, err)
 		}
@@ -89,12 +81,11 @@ func (h *AuthHandler) RegisterUser(c *fiber.Ctx) error {
 	// create user into database
 	hgId, err := h.userUc.CreateUser(c.Context(), *userDoc)
 	if err != nil {
-		fmt.Printf("Error Create : %v\n", err)
 		return reponseError(c, err)
 	}
 
 	// generate token and create token document into database
-	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{HgId: hgId})
+	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), "Bearer", &model.AuthClaim{HgId: hgId})
 	if err != nil {
 		return reponseError(c, err)
 	}
@@ -157,7 +148,7 @@ func (h *AuthHandler) Otp(c *fiber.Ctx) error {
 	}
 
 	// generate token and create token document into database
-	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), acExp, rfExp, "Bearer", &model.AuthClaim{HgId: userDoc.HgId})
+	tkDoc, err := h.authUc.ReqTokenDocument(c.Context(), "Bearer", &model.AuthClaim{HgId: userDoc.HgId})
 	if err != nil {
 		return reponseError(c, err)
 	}
