@@ -19,7 +19,6 @@ func NewUserUsecase(UserFirestoreRepo interfaces.UserFirestoreRepository) *UserU
 }
 
 func (u *UserUsecase) CreateUser(ctx context.Context, user model.RegisterUser) (id string, err error) {
-	// Check User already existing by UserId and Email
 	if userDoc, _ := u.GetUserById(ctx, user.ID); (userDoc != model.User{}) {
 		return "", errs.UserAlreadyExsiting
 	}
