@@ -11,7 +11,7 @@ type User struct {
 	Nickname  string    `json:"nickname,omitempty" firestore:"nickname,omitempty"`
 	Email     string    `json:"email,omitempty" firestore:"email,omitempty"`
 	Platform  string    `json:"platform" example:"facebook" firestore:"platform"`
-	Password  string    `json:"password,omitempty" firestore:"password,omitempty"`
+	Picture   string    `json:"picture" firstore:"picture"`
 	CreateAt  time.Time `firestore:"createdAt"`
 	UpdatedAt time.Time `firestore:"updatedAt"`
 	DeletedAt time.Time `firestore:"deletedAt"`
@@ -24,6 +24,7 @@ type RegisterUser struct {
 	Password string `json:"password,omitempty"`
 	Platform string `json:"platform" validate:"required,oneof=social otp"`
 	Gender   string `json:"gender" validate:"required"`
+	Picture  string `json:"picture" validate:"omitempty,dive,url"`
 	Otp      string `json:"otp,omitempty" validate:"required_if=Platform otp,omitempty,len=6,numeric"`
 }
 

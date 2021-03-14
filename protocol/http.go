@@ -7,7 +7,7 @@ import (
 	"github.com/HangoKub/Hango-service/internal/core/usecases"
 	"github.com/HangoKub/Hango-service/internal/handlers"
 	"github.com/HangoKub/Hango-service/internal/repositories"
-	"github.com/HangoKub/Hango-service/pkg/connection/databases"
+	"github.com/HangoKub/Hango-service/pkg/databases"
 	"github.com/HangoKub/Hango-service/pkg/genkey"
 	"github.com/HangoKub/Hango-service/pkg/validators"
 

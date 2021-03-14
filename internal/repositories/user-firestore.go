@@ -53,23 +53,14 @@ func (r *UserFirestoreRepo) CreateUser(ctx context.Context, user model.RegisterU
 		HgId:      hgId,
 		Nickname:  user.Nickname,
 		Platform:  user.Platform,
+		Picture:   user.Picture,
 		CreateAt:  time.Now(),
-		UpdatedAt: time.Now(),
-	})
-
-	profRef := r.firestore.Collection(profileCollection).NewDoc()
-	batch.Set(profRef, model.Profile{
-		HgId:      hgId,
-		Nickname:  user.Nickname,
-		Gender:    user.Gender,
-		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	})
 
 	_, err = batch.Commit(ctx)
 	if err != nil {
 		batch.Delete(userRef)
-		batch.Delete(profRef)
 		batch.Commit(ctx)
 		return "", err
 	}

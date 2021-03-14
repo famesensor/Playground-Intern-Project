@@ -30,12 +30,6 @@ type UserFirestoreRepository interface {
 	// GetUserByEmail -> is the (fn) get user information by Email
 	GetUserByEmail(ctx context.Context, email string) (model.User, error)
 }
-
-type ProfileFirestoreRepository interface {
-	// GetProfileByHgId -> is the (fn) get profile information by hgId
-	GetProfileByHgId(ctx context.Context, hgId string) (model.Profile, error)
-}
-
 type RestaurantFirestoreRepository interface {
 	// CreateRestaurant(ctx context.Context, restDoc model.CreateRestaurant) error
 	GetRestaurantById(ctx context.Context, restId string) (model.ResponseRestaurant, error)

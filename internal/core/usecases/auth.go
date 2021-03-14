@@ -30,11 +30,10 @@ func NewAuthUsecase(firestoreRepo interfaces.AuthFirestoreRepository, prirKey *r
 	}
 }
 
-func (u *AuthUsecase) ReqTokenDocument(ctx context.Context, acT time.Duration, rfT time.Duration, tokenType string, claims *model.AuthClaim) (model.TokenVerificationDocuments, error) {
-	var tkVerifyDoc model.TokenVerificationDocuments
+func (u *AuthUsecase) ReqTokenDocument(ctx context.Context, tokenType string, claims *model.AuthClaim) (model.TokenVerificationDocuments, error) {
 	iat := time.Now()
-	exp := time.Now().Add(acT)
-	rfExp := time.Now().Add(rfT)
+	exp := time.Now().Add(time.Minute * 10)
+	rfExp := time.Now().Add(time.Hour * 168)
 	stdClaim := jwt.StandardClaims{
 		IssuedAt:  iat.Unix(),
 		ExpiresAt: exp.Unix(),
@@ -47,7 +46,7 @@ func (u *AuthUsecase) ReqTokenDocument(ctx context.Context, acT time.Duration, r
 		return model.TokenVerificationDocuments{}, err
 	}
 	refreshTk := uuid.Must(uuid.NewRandom()).String() + pkg.RandUUID(9999999999, 1000000000, 32)
-	tkVerifyDoc = generateTokenVerifyDocument(acTk, refreshTk, tokenType, rfExp, claims)
+	tkVerifyDoc := generateTokenVerifyDocument(acTk, refreshTk, tokenType, rfExp, claims)
 
 	return tkVerifyDoc, nil
 }
@@ -66,13 +65,11 @@ func (u *AuthUsecase) RefreshToken(ctx context.Context, refreshTk string) (model
 		return model.TokenCard{}, errs.InvalidToken
 	}
 
-	acT := time.Minute * 10
-	rfT := time.Hour * 168
 	clamis := &model.AuthClaim{
 		HgId: rfToken.HgId,
 	}
 
-	TkDoc, err := u.ReqTokenDocument(ctx, acT, rfT, "bearer", clamis)
+	TkDoc, err := u.ReqTokenDocument(ctx, "bearer", clamis)
 	if err != nil {
 		return model.TokenCard{}, err
 	}
