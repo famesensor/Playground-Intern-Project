@@ -1,2 +1,2 @@
-# Hango-service
+# Internship-service
 This project for internship.
